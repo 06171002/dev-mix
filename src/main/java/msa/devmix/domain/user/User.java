@@ -54,15 +54,11 @@ public class User {
         this.profileImage = profileImage;
     }
 
-    public static User of(String username, String password, String name, String email, String groupName, String provider, String providerId, Role role) {
-        return new User(username, password, name, email, groupName, provider, providerId, role);
+    public static User of(String username, String password, String nickname, String email, String groupName, String provider, String providerId, Role role) {
+        return new User(username, password, nickname, email, groupName, provider, providerId, role);
     }
 
     public static User of(Long id, String username, String nickname, String email, String groupName, String profileImage) {
         return new User(id, username, nickname, email, groupName, profileImage);
-    }
-
-    public UserDto toDto() {
-        return UserDto.of(id, username, nickname, email, groupName, profileImage, role);
     }
 }

@@ -39,13 +39,4 @@ public class NotificationController {
 
         return ResponseEntity.ok().body(ResponseDto.success());
     }
-
-    //Test: 특정 게시물에 대한 댓글이라고 가정
-//    @PostMapping("/notify")
-//    public ResponseEntity<Void> commentNotify() {
-//        notificationService.send(userService.findById(1L),
-//                NotificationType.POST_COMMENT,
-//                "댓글이 달렸습니다!");
-//        return ResponseEntity.ok().build();
-//    }
 }

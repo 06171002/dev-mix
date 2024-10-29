@@ -51,9 +51,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public SseEmitter connect(User user) {
 
-        SseEmitter emitterByUsername = emitterRepository.findByUsername(user.getUsername());
-        if (emitterByUsername != null) {
-
+        SseEmitter oldSseEmitter = emitterRepository.findByUsername(user.getUsername());
+        if (oldSseEmitter != null) {
+            return oldSseEmitter;
         }
 
         SseEmitter sseEmitter = emitterRepository.save(user.getUsername(), new SseEmitter(DEFAULT_TIMEOUT));
