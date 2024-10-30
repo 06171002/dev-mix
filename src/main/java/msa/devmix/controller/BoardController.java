@@ -6,17 +6,18 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import msa.devmix.config.oauth.userinfo.UserPrincipal;
 import msa.devmix.domain.board.Board;
-import msa.devmix.domain.constant.NotificationType;
+import msa.devmix.domain.board.BoardPosition;
 import msa.devmix.dto.*;
 import msa.devmix.dto.request.*;
 import msa.devmix.dto.response.BoardWithPositionTechStackResponse;
 import msa.devmix.dto.response.ResponseDto;
 import msa.devmix.exception.CustomException;
 import msa.devmix.exception.ErrorCode;
+import msa.devmix.repository.BoardPositionRepository;
 import msa.devmix.repository.BoardRepository;
+import msa.devmix.repository.PositionRepository;
+import msa.devmix.service.ApplyService;
 import msa.devmix.service.BoardService;
-import msa.devmix.service.NotificationService;
-import msa.devmix.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,7 +38,8 @@ public class BoardController {
 
     private final BoardService boardService;
     private final BoardRepository boardRepository;
-
+    private final ApplyService applyService;
+    private final BoardPositionRepository boardPositionRepository;
 
     /**
      * 게시글 기능
@@ -182,5 +183,19 @@ public class BoardController {
     ) {
         boardService.putScrap(boardId, userPrincipal.getUser());
         return ResponseEntity.ok().body(ResponseDto.success());
+    }
+
+    /**
+     * 프로젝트 지원 기능
+     */
+    @PostMapping("/{board-id}/apply")
+    public ResponseEntity<?> apply(@PathVariable("board-id") Long boardId,
+                                   @Valid @RequestBody ApplyRequest applyRequest,
+                                   @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        applyService.saveApply(applyRequest.toDto(userPrincipal.getUser(), boardId));
+
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.success());
     }
 }

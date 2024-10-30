@@ -28,7 +28,7 @@ public class BoardPositionDto {
         return new BoardPositionDto(positionName, requiredCount, currentCount);
     }
 
-    public BoardPosition toEntity(Board board, Position position) {
+    public BoardPosition toEntity(Board board, Position position, Long requiredCount) {
         return BoardPosition.of(board, position, requiredCount, currentCount);
     }
 }

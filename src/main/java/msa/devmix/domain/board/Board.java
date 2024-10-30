@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import msa.devmix.domain.common.BaseTimeEntity;
 import msa.devmix.domain.constant.Location;
 import msa.devmix.domain.constant.RecruitmentStatus;
-import msa.devmix.domain.constant.RecruitmentType;
 import msa.devmix.domain.user.User;
 
 import java.time.LocalDateTime;

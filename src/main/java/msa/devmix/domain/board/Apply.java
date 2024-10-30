@@ -1,5 +1,6 @@
 package msa.devmix.domain.board;
 
+import com.nimbusds.oauth2.sdk.dpop.DPoPUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,18 @@ public class Apply {
     @JoinColumn(name = "board_position_id")
     private BoardPosition boardPosition;
 
+    @Enumerated(EnumType.STRING)
     private ParticipationStatus participationStatus; //참여 여부 (YES, NO, UNKNOWN)
+    private String note; //지원 사유 및 한마디
+
+    private Apply(User user, BoardPosition boardPosition, ParticipationStatus participationStatus, String note) {
+        this.user = user;
+        this.boardPosition = boardPosition;
+        this.participationStatus = participationStatus;
+        this.note = note;
+    }
+
+    public static Apply of(User user, BoardPosition boardPosition, ParticipationStatus participationStatus, String note) {
+        return new Apply(user, boardPosition, participationStatus, note);
+    }
 }

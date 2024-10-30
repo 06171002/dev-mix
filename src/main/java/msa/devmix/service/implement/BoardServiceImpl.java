@@ -97,14 +97,18 @@ public class BoardServiceImpl implements BoardService {
             throw new CustomException(ErrorCode.POSITION_NOT_FOUND);
         }
 
+//        boardPositionDtos
+//                .stream()
+//                .map(boardPositionDto -> {
+//                    if (positionRepository.findByPositionName(boardPositionDto.getPositionName()) != null) {
+//                        return boardPositionDto.toEntity(board, positionRepository.findByPositionName(boardPositionDto.getPositionName()));
+//                    } else {
+//                        throw new CustomException(ErrorCode.POSITION_NOT_FOUND);
+//                    }
+//                })
+//                .forEach(boardPositionRepository::save);
         boardPositionDtos.stream()
-                .map(boardPositionDto -> {
-                    if (positionRepository.findByPositionName(boardPositionDto.getPositionName()) != null) {
-                        return boardPositionDto.toEntity(board, positionRepository.findByPositionName(boardPositionDto.getPositionName()));
-                    } else {
-                        throw new CustomException(ErrorCode.POSITION_NOT_FOUND);
-                    }
-                })
+                .map(boardPositionDto -> boardPositionDto.toEntity(board, positionRepository.findByPositionName(boardPositionDto.getPositionName()).get(), boardPositionDto.getRequiredCount()))
                 .forEach(boardPositionRepository::save);
 
         boardTechStackDtos.stream()
@@ -116,7 +120,6 @@ public class BoardServiceImpl implements BoardService {
                     }
                 })
                 .forEach(boardTechStackRepository::save);
-
     }
 
     //게시글 수정

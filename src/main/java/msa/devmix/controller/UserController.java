@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 로그인된 사용자 정보 조회
+     * 로그인된 사용자 본인 정보 조회
      */
     @GetMapping
     public ResponseEntity<?> getSignInUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -35,9 +35,9 @@ public class UserController {
     /**
      * 사용자 상세 프로필 조회
      */
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getUser(@PathVariable("username") String username) {
-        userService.getUserInfo(username);
-        return null;
+    @GetMapping("/{user-id}")
+    public ResponseEntity<?> getUser(@PathVariable("user-id") Long userId) {
+        return ResponseEntity.ok()
+                .body(ResponseDto.success(userService.getUserInfo(userId)));
     }
 }

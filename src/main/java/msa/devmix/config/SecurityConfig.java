@@ -32,7 +32,6 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserDetailService userDetailService;
-    private final UserService userService;
 
     @Bean
     public WebSecurityCustomizer configure() {  // 스프링 시큐리티 기능 비활성화

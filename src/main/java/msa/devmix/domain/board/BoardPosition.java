@@ -49,4 +49,8 @@ public class BoardPosition {
                 .build();
     }
 
+    public boolean isPositionAvailable() {
+        return !currentCount.equals(requiredCount);
+    }
+
 }
