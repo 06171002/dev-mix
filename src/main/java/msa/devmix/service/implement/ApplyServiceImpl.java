@@ -44,7 +44,7 @@ public class ApplyServiceImpl implements ApplyService {
                 .orElseThrow(() -> new CustomException(ErrorCode.POSITION_NOT_MATCH));
 
         //해당 게시글에 해당 포지션의 인원 꽉 찼는지 확인
-        if (boardPosition.getCurrentCount().equals(boardPosition.getRequiredCount())) {
+        if (!boardPosition.isPositionAvailable()) {
             throw new CustomException(ErrorCode.POSITION_FULL);
         }
 
