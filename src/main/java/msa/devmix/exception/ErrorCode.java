@@ -24,6 +24,8 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "This method is not supported."),
     TECH_STACK_NOT_FOUND(HttpStatus.NOT_FOUND,"TechStack not founded"),
     POSITION_NOT_FOUND(HttpStatus.NOT_FOUND,"Position not founded"),
+    POSITION_NOT_MATCH(HttpStatus.NOT_FOUND,"Position not matched."),
+    POSITION_FULL(HttpStatus.FORBIDDEN, "Position full."),
 
     //5xx 서버 오류
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error."),
