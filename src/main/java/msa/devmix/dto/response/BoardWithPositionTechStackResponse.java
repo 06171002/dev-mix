@@ -2,10 +2,14 @@ package msa.devmix.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import msa.devmix.domain.constant.Location;
 import msa.devmix.dto.BoardWithPositionTechStackDto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -19,16 +23,17 @@ public class BoardWithPositionTechStackResponse {
     private String content;
     private Long boardId;
     private String imageUrl;
+    private Location location;
     private String recruitmentStatus;
     private Long viewCount;
     private Long projectPeriod;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private String userNickname;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String nickname;
     private String username;
     private String profileImage;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private String createdAt;
+    private String lastModifiedAt;
 
     //
     private List<BoardTechStackResponse> techStackDtoList;
@@ -36,11 +41,15 @@ public class BoardWithPositionTechStackResponse {
 
 
     public static BoardWithPositionTechStackResponse from(BoardWithPositionTechStackDto dto) {
+
+
+
         return BoardWithPositionTechStackResponse.of(
                 dto.getTitle(),
                 dto.getContent(),
                 dto.getBoardId(),
                 dto.getImageUrl(),
+                dto.getLocation(),
                 dto.getRecruitmentStatus().name(),
                 dto.getViewCount(),
                 dto.getProjectPeriod(),
@@ -50,7 +59,7 @@ public class BoardWithPositionTechStackResponse {
                 dto.getUserDto().getUsername(),
                 dto.getUserDto().getProfileImage(),
                 dto.getCreatedAt(),
-                dto.getModifiedAt(),
+                dto.getLastModifiedAt(),
                 BoardTechStackResponse.from(dto.getBoardTechStackDtos()),
                 BoardPositionResponse.from(dto.getBoardPositionDtos()));
     }
@@ -59,34 +68,38 @@ public class BoardWithPositionTechStackResponse {
                                                         String content,
                                                         Long boardId,
                                                         String imageUrl,
+                                                        Location location,
                                                         String recruitmentStatus,
                                                         Long viewCount,
                                                         Long projectPeriod,
-                                                        LocalDateTime startDate,
-                                                        LocalDateTime endDate,
-                                                        String userNickname,
+                                                        LocalDate startDate,
+                                                        LocalDate endDate,
+                                                        String nickname,
                                                         String username,
                                                         String profileImage,
                                                         LocalDateTime createdAt,
-                                                        LocalDateTime modifiedAt,
+                                                        LocalDateTime lastModifiedAt,
                                                         List<BoardTechStackResponse> techStackResponseList,
                                                         List<BoardPositionResponse> positionResponseList) {
 
+        String createdAtToString = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String lastModifiedAtToString = lastModifiedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return new BoardWithPositionTechStackResponse(
                 title,
                 content,
                 boardId,
                 imageUrl,
+                location,
                 recruitmentStatus,
                 viewCount,
                 projectPeriod,
                 startDate,
                 endDate,
-                userNickname,
+                nickname,
                 username,
                 profileImage,
-                createdAt,
-                modifiedAt,
+                createdAtToString,
+                lastModifiedAtToString,
                 techStackResponseList,
                 positionResponseList);
     }

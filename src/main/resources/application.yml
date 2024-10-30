@@ -44,8 +44,8 @@ spring:
               - profile_nickname
               - profile_image
           naver:
-            client-id: x27a1mNcRaJ0gcHR9TOm #애플리케이션 정보의 Client ID
-            client-secret: KrdIeITcD7 #애플리케이션 정보의 Client Secret
+            client-id: rBP9ynsuMts_Vqqd3vCD #애플리케이션 정보의 Client ID
+            client-secret: JyQFeeAbsu #애플리케이션 정보의 Client Secret
             redirect_uri: "{baseUrl}/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope: email

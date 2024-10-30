@@ -4,6 +4,7 @@ import com.nimbusds.oauth2.sdk.dpop.DPoPUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import msa.devmix.domain.constant.ParticipationStatus;
@@ -14,6 +15,7 @@ import msa.devmix.domain.user.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@Getter
 public class Apply {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

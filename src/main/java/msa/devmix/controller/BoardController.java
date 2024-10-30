@@ -57,6 +57,7 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<?> boards(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        boardService.getBoards(pageable);
         return null;
     }
 

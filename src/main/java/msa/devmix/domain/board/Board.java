@@ -7,7 +7,9 @@ import msa.devmix.domain.common.BaseTimeEntity;
 import msa.devmix.domain.constant.Location;
 import msa.devmix.domain.constant.RecruitmentStatus;
 import msa.devmix.domain.user.User;
+import msa.devmix.dto.BoardDto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -27,14 +29,15 @@ public class Board extends BaseTimeEntity {
     @Setter
     private User user;
 
-    private Location location;
-
     private String title; //게시글 제목
     private String content; //게시글 내용
-    private String imageUrl; //게시글 이미지 URL
+    private String imageUrl;//게시글 이미지 URL
+
+    private Location location;
+
     private Long projectPeriod; //프로젝트 진행기간
-    private LocalDateTime startDate; //프로젝트 시작일
-    private LocalDateTime recruitEndDate; //모집 마감일
+    private LocalDate startDate; //프로젝트 시작일
+    private LocalDate recruitEndDate; //모집 마감일
 
     @Enumerated(EnumType.STRING)
     @Setter
@@ -42,25 +45,69 @@ public class Board extends BaseTimeEntity {
 
     @Setter
     private Long viewCount; //조회수
+    @Setter
     private Long commentCount; //댓글 갯수
 
-    @Builder
-    public Board(
+
+    public static Board of(
                  String title,
                  String content,
                  String imageUrl,
                  Location location,
                  Long projectPeriod,
-                 LocalDateTime startDate,
-                 LocalDateTime recruitEndDate
+                 LocalDate startDate,
+                 LocalDate recruitEndDate
     ) {
-        this.title = title;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.location = location;
-        this.projectPeriod = projectPeriod;
-        this.startDate = startDate;
-        this.recruitEndDate = recruitEndDate;
+        return new Board(
+                null,
+                null,
+                title,
+                content,
+                imageUrl,
+                location,
+                projectPeriod,
+                startDate,
+                recruitEndDate,
+                null,
+                null,
+                null
+        );
+    }
+
+    public static Board of(String title,
+                           String content,
+                           String imageUrl,
+                           Location location,
+                           Long projectPeriod,
+                           LocalDate startDate,
+                           LocalDate recruitEndDate,
+                           RecruitmentStatus recruitmentStatus) {
+        return new Board(
+                null,
+                null,
+                title,
+                content,
+                imageUrl,
+                location,
+                projectPeriod,
+                startDate,
+                recruitEndDate,
+                recruitmentStatus,
+                null,
+                null);
+
+    }
+
+
+    public void update(BoardDto boardDto) {
+             this.title = boardDto.getTitle();
+             this.content = boardDto.getContent();
+             this.imageUrl = boardDto.getImageUrl();
+             this.location = boardDto.getLocation();
+             this.projectPeriod = boardDto.getProjectPeriod();
+             this.startDate = boardDto.getStartDate();
+             this.recruitEndDate = boardDto.getRecruitEndDate();
+             this.recruitmentStatus = boardDto.getRecruitmentStatus();
     }
 
     public void increaseViewCount() {

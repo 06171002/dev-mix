@@ -1,12 +1,16 @@
 package msa.devmix.controller;
 
 
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import msa.devmix.config.oauth.userinfo.UserPrincipal;
 import msa.devmix.dto.UserDto;
 import msa.devmix.dto.response.ResponseDto;
+import msa.devmix.dto.response.UserBoardsResponse;
 import msa.devmix.service.UserService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,5 +43,17 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable("user-id") Long userId) {
         return ResponseEntity.ok()
                 .body(ResponseDto.success(userService.getUserInfo(userId)));
+    }
+
+    @GetMapping("/{user-id}/boards")
+    public ResponseEntity<?> getUserBoards(@PathVariable("user-id") @Min(1) Long userId,
+                                           @PageableDefault Pageable pageable) {
+
+        return ResponseEntity
+                .ok()
+                .body(ResponseDto
+                        .success(userService.findUserBoards(userId, pageable).stream()
+                                .map(UserBoardsResponse::from)
+                                .toList()));
     }
 }

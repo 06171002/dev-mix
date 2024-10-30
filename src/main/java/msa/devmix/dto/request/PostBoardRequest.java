@@ -13,6 +13,7 @@ import msa.devmix.dto.UserDto;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +37,19 @@ public class PostBoardRequest {
     @NotNull
     private Long projectPeriod; //프로젝트 진행기간
 
-    private Location location; //모집 지역
+    private String location;
 
     @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime startDate; //프로젝트 시작일
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDate startDate; //프로젝트 시작일
 
     @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime recruitEndDate; //모집 마감일
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDate recruitEndDate; //모집 마감일
+
 
     private List<BoardTechStackRequest> boardTechStackList;
 //    private List<BoardPositionRequest> boardPositionList;
@@ -70,7 +73,7 @@ public class PostBoardRequest {
                 title,
                 content,
                 userDto,
-                location,
+                Location.valueOf(location),
                 imageUrl,
                 projectPeriod,
                 startDate,

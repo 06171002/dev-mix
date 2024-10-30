@@ -24,7 +24,9 @@ public class BoardPosition {
     @JoinColumn(name = "position_id")
     private Position position;
 
+    @Setter
     private Long requiredCount; //모집 인원
+    @Setter
     private Long currentCount; //현재 인원
 
     @Builder

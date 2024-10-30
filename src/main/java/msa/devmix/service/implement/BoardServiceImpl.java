@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import msa.devmix.domain.board.*;
 import msa.devmix.domain.common.Position;
+import msa.devmix.domain.common.TechStack;
 import msa.devmix.domain.constant.NotificationType;
 import msa.devmix.domain.constant.RecruitmentStatus;
 import msa.devmix.domain.user.User;
@@ -43,6 +44,7 @@ public class BoardServiceImpl implements BoardService {
      */
     //게시글 단건 조회
     @Override
+    @Transactional
     public BoardWithPositionTechStackDto getBoard(Long boardId) {
 
         BoardDto boardDto = boardRepository
@@ -79,6 +81,7 @@ public class BoardServiceImpl implements BoardService {
         board.setUser(userRepository.findById(boardDto.getUserDto().getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
         board.setViewCount(0L);
+        board.setCommentCount(0L);
 
         boardRepository.save(board);
 
@@ -87,6 +90,7 @@ public class BoardServiceImpl implements BoardService {
          * todo: 최대 인원수 검증 필요
          */
 
+        // boardPosition save
         List<String> positionNames = boardPositionDtos.stream()
                 .map(BoardPositionDto::getPositionName)
                         .toList();
@@ -111,15 +115,25 @@ public class BoardServiceImpl implements BoardService {
                 .map(boardPositionDto -> boardPositionDto.toEntity(board, positionRepository.findByPositionName(boardPositionDto.getPositionName()).get(), boardPositionDto.getRequiredCount()))
                 .forEach(boardPositionRepository::save);
 
+
+        // boardTechStack save
+        List<String> techStackNames = boardTechStackDtos.stream()
+                .map(BoardTechStackDto::getTechStackName)
+                .toList();
+
+        List<TechStack> existingTechStacks = techStackRepository.findByTechStackNameIn(techStackNames);
+
+        if (techStackNames.size() != existingTechStacks.size()) {
+            throw new CustomException(ErrorCode.TECH_STACK_NOT_FOUND);
+        }
+
         boardTechStackDtos.stream()
-                .map(boardTechStackDto -> {
-                    if (techStackRepository.findByTechStackName(boardTechStackDto.getTechStackName()) != null) {
-                        return boardTechStackDto.toEntity(board, techStackRepository.findByTechStackName(boardTechStackDto.getTechStackName()));
-                    } else {
-                        throw new CustomException(ErrorCode.TECH_STACK_NOT_FOUND);
-                    }
-                })
+                .map(boardTechStackDto
+                        -> boardTechStackDto.toEntity(
+                                board,
+                                techStackRepository.findByTechStackName(boardTechStackDto.getTechStackName())))
                 .forEach(boardTechStackRepository::save);
+
     }
 
     //게시글 수정
@@ -129,6 +143,71 @@ public class BoardServiceImpl implements BoardService {
                             BoardDto boardDto,
                             List<BoardPositionDto> boardPositionDtos,
                             List<BoardTechStackDto> boardTechStackDtos) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        board.update(boardDto);
+
+        // boardPosition update
+        // 현재 게시판의 기존 `BoardPosition` 엔티티 목록 가져오기
+        List<BoardPosition> existingBoardPositions = boardPositionRepository.findByBoardId(boardId);
+
+       // 새로운 요청 데이터에 맞춰 `BoardPosition` 업데이트 또는 삽입
+        for (BoardPositionDto dto : boardPositionDtos) {
+            Position position = positionRepository.findByPositionName(dto.getPositionName())
+                    .orElseThrow(() -> new CustomException(ErrorCode.POSITION_NOT_FOUND));
+            BoardPosition boardPosition = existingBoardPositions.stream()
+                    .filter(bp -> bp.getPosition().equals(position))
+                    .findFirst()
+                    .orElse(null);
+
+            if (boardPosition != null) {
+                // 이미 존재하는 경우: 업데이트
+                boardPosition.setRequiredCount(dto.getRequiredCount());
+                boardPosition.setCurrentCount(dto.getCurrentCount());
+            } else {
+                // 새로 추가하는 경우: 엔티티 생성 후 저장
+                BoardPosition newBoardPosition = dto.toEntity(board, position, dto.getRequiredCount(), dto.getCurrentCount());
+                boardPositionRepository.save(newBoardPosition);
+            }
+        }
+
+        // 기존 리스트에서 새로운 데이터에 없는 항목은 삭제
+        List<BoardPosition> deleteBoardPosition  = existingBoardPositions.stream()
+                .filter(bp -> boardPositionDtos.stream().noneMatch(dto -> dto.getPositionName().equals(bp.getPosition().getPositionName())))
+                .toList();
+
+        boardPositionRepository.deleteAll(deleteBoardPosition);
+
+
+
+        // boardTechStack update
+        // 현재 게시판의 기존 'BoardTechStack' 엔티티 목록 가져오기
+        List<BoardTechStack> existingBoardTechStack = boardTechStackRepository.findByBoardId(boardId);
+
+        for (BoardTechStackDto dto : boardTechStackDtos) {
+            TechStack techStack = techStackRepository.findByTechStackName(dto.getTechStackName());
+            BoardTechStack boardTechStack = existingBoardTechStack.stream()
+                    .filter(bts -> bts.getTechStack().equals(techStack))
+                    .findFirst()
+                    .orElse(null);
+            // 이미 존재하는 경우 pass
+
+            if (boardTechStack == null) {
+                // 새로 추가하는 경우: 엔티티 생성 후 저장
+                BoardTechStack newBoardTechStack = dto.toEntity(board, techStack);
+                boardTechStackRepository.save(newBoardTechStack);
+            }
+
+        }
+
+        // 새로운 데이터에 없는 항목 삭제
+        List<BoardTechStack> deleteBoardTechStack = existingBoardTechStack.stream()
+                .filter(bts -> boardTechStackDtos.stream()
+                        .noneMatch(dto -> dto.getTechStackName().equals(bts.getTechStack().getTechStackName())))
+                .toList();
+        boardTechStackRepository.deleteAll(deleteBoardTechStack);
+
 
     }
 
@@ -158,6 +237,9 @@ public class BoardServiceImpl implements BoardService {
     //게시글 리스트 조회
     @Override
     public Page<BoardDto> getBoards(Pageable pageable) {
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+
+
         return null;
     }
 

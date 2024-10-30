@@ -8,6 +8,7 @@ import msa.devmix.domain.board.Board;
 import msa.devmix.domain.constant.Location;
 import msa.devmix.domain.constant.RecruitmentStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -25,11 +26,11 @@ public class BoardDto {
     private String imageUrl;
     private Long viewCount; //조회수
     private Long projectPeriod; //프로젝트 진행기간
-    private LocalDateTime startDate; //프로젝트 시작일
-    private LocalDateTime recruitEndDate;
+    private LocalDate startDate; //프로젝트 시작일
+    private LocalDate recruitEndDate;
     private RecruitmentStatus recruitmentStatus;
     private LocalDateTime createdAt; //게시글 생성일자
-    private LocalDateTime modifiedAt; //게시글 수정일자
+    private LocalDateTime lastModifiedAt; //게시글 수정일자
 
     public static BoardDto of(
             String title,
@@ -38,8 +39,8 @@ public class BoardDto {
             Location location,
             String imageUrl,
             Long projectPeriod,
-            LocalDateTime startDate,
-            LocalDateTime recruitEndDate,
+            LocalDate startDate,
+            LocalDate recruitEndDate,
             RecruitmentStatus recruitmentStatus) {
         return new BoardDto(
                 null,
@@ -84,10 +85,10 @@ public class BoardDto {
                               RecruitmentStatus recruitmentStatus,
                               Long viewCount,
                               Long projectPeriod,
-                              LocalDateTime startDate,
-                              LocalDateTime recruitEndDate,
+                              LocalDate startDate,
+                              LocalDate recruitEndDate,
                               LocalDateTime createdAt,
-                              LocalDateTime modifiedAt) {
+                              LocalDateTime lastModifiedAt) {
         return new BoardDto(
                 boardId,
                 title,
@@ -101,7 +102,7 @@ public class BoardDto {
                 recruitEndDate,
                 recruitmentStatus,
                 createdAt,
-                modifiedAt);
+                lastModifiedAt);
     }
 
     public static BoardDto of(String title,
@@ -110,8 +111,8 @@ public class BoardDto {
                               Location location,
                               String imageUrl,
                               Long projectPeriod,
-                              LocalDateTime startDate,
-                              LocalDateTime recruitEndDate
+                              LocalDate startDate,
+                              LocalDate recruitEndDate
                               ) {
         return new BoardDto(
                 null,
@@ -130,15 +131,16 @@ public class BoardDto {
     }
 
     public Board toEntity() {
-        return Board.builder()
-                .title(title)
-                .content(content)
-                .location(location)
-                .imageUrl(imageUrl)
-                .projectPeriod(projectPeriod)
-                .startDate(startDate)
-                .recruitEndDate(recruitEndDate)
-                .build();
+        return Board.of(
+                title,
+                content,
+                imageUrl,
+                location,
+                projectPeriod,
+                startDate,
+                recruitEndDate);
+
+
     }
 
 

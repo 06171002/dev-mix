@@ -2,19 +2,22 @@ package msa.devmix.service.implement;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import msa.devmix.domain.board.Board;
 import msa.devmix.domain.user.User;
 import msa.devmix.dto.TechStackDto;
+import msa.devmix.dto.UserBoardsDto;
 import msa.devmix.dto.UserWithPositionTechStackDto;
 import msa.devmix.exception.CustomException;
 import msa.devmix.exception.ErrorCode;
-import msa.devmix.repository.UserPositionRepository;
-import msa.devmix.repository.UserRepository;
-import msa.devmix.repository.UserTechStackRepository;
+import msa.devmix.repository.*;
 import msa.devmix.service.UserService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserPositionRepository userPositionRepository;
     private final UserTechStackRepository userTechStackRepository;
+    private final BoardRepository boardRepository;
 
     //유저 ID로 유저 엔티티 조회
     public User findById(Long userId) {
@@ -49,4 +53,17 @@ public class UserServiceImpl implements UserService {
 
         return UserWithPositionTechStackDto.of(user, positionNames, techStackNames);
     }
+
+    @Override
+    public List<UserBoardsDto> findUserBoards(Long userId, Pageable pageable) {
+
+        List<Board> boards = boardRepository.findByUserId(userId, pageable)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        return boards.stream()
+                .map(UserBoardsDto::from)
+                .toList();
+    }
+
+
 }

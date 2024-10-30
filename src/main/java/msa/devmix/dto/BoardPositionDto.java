@@ -31,4 +31,13 @@ public class BoardPositionDto {
     public BoardPosition toEntity(Board board, Position position, Long requiredCount) {
         return BoardPosition.of(board, position, requiredCount, currentCount);
     }
+
+    public BoardPosition toEntity(Board board, Position position, Long requiredCount, Long currentCount) {
+        return BoardPosition.builder()
+                .board(board)
+                .position(position)
+                .requiredCount(requiredCount)
+                .currentCount(currentCount)
+                .build();
+    }
 }
