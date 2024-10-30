@@ -1,4 +1,5 @@
-insert into user (user_id, email, group_name, nickname, password, profile_image, provider, provider_id, username, role) values (1, 'guri8376@gmail.com', NULL, 'guri', '$2a$10$YdUD4z.bWxeaNnVkwup4eOwUI9oGUaJBZCIlyJfRqCHBVYRKl7vBO', 'http://dummyimage.com/183x100.png/cc0000/ffffff', 'google', '112352185765074384097', 'google_112352185765074384097', 'ROLE_GUEST');
+-- insert into user (user_id, email, group_name, nickname, password, profile_image, provider, provider_id, username, role) values (1, 'guri8376@gmail.com', NULL, 'guri', '$2a$10$YdUD4z.bWxeaNnVkwup4eOwUI9oGUaJBZCIlyJfRqCHBVYRKl7vBO', 'http://dummyimage.com/183x100.png/cc0000/ffffff', 'google', '112352185765074384097', 'google_112352185765074384097', 'ROLE_GUEST');
+insert into user (user_id, email, group_name, nickname, password, profile_image, provider, provider_id, username, role) values (1, 'tpduq2@gmail.com', NULL, 'tpduq2', '$2a$10$YdUD4z.bWxeaNnVkwup4eOwUI9oGUaJBZCIlyJfRqCHBVYRKl7vBO', 'http://dummyimage.com/183x100.png/cc0000/ffffff', 'google', '114804229247367958726', 'google_114804229247367958726', 'ROLE_GUEST');
 
 insert into board (board_id, user_id, title, content, image_url, recruit_end_date, start_date, project_period, recruitment_status, view_count, comment_count, created_at, last_modified_at) values (1, 1, 'Aerified', 'clechmere0@hud.gov', 'http://dummyimage.com/183x100.png/cc0000/ffffff', '2024-10-27 23:16:57', '2024-10-27 23:16:57', 1, 'RECRUITING', 0, 0, '2024-10-27 23:16:53.889355', '2024-10-27 23:16:53.889355');
 insert into board (board_id, user_id, title, content, image_url, recruit_end_date, start_date, project_period, recruitment_status, view_count, comment_count, created_at, last_modified_at) values (2, 1, 'Stringtough', 'skenafaque1@nih.gov', 'http://dummyimage.com/209x100.png/dddddd/000000', '2024-10-27 23:16:57', '2024-10-27 23:16:57', 2, 'RECRUITING', 0, 0, '2024-10-27 23:16:54.889355', '2024-10-27 23:16:54.889355');
@@ -21,6 +22,8 @@ insert into position (position_id, position_name) values (6, 'Android Developer'
 insert into position (position_id, position_name) values (7, 'IOS Developer');
 insert into position (position_id, position_name) values (8, 'Cross Platform Developer');
 insert into position (position_id, position_name) values (9, 'Planner');
+
+insert into board_position (board_position_id, board_id, position_id, required_count, current_count) values (1, 1, 2, 1, 0);
 
 insert into comment (comment_id, user_id, board_id, content, created_at, last_modified_at) values (1, 1, 1, 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', '2024-10-27 23:16:53.889355', '2024-10-27 23:16:53.889355');
 insert into comment (comment_id, user_id, board_id, content, created_at, last_modified_at) values (2, 1, 1, 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', '2024-10-27 23:16:54.889355', '2024-10-27 23:16:54.889355');

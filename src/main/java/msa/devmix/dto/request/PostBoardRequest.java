@@ -1,7 +1,10 @@
 package msa.devmix.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import msa.devmix.domain.constant.Location;
@@ -28,28 +31,26 @@ public class PostBoardRequest {
     @Length(max = 1500)
     private String content; //게시글 내용
 
-    private String imageUrl; //게시글 이미지 URL
+    private String imageUrl; //게시글 대표 이미지 URL
 
-    @NotBlank
+    @NotNull
     private Long projectPeriod; //프로젝트 진행기간
 
     private Location location; //모집 지역
 
-    @NotBlank
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime startDate; //프로젝트 시작일
 
-    @NotBlank
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime recruitEndDate; //모집 마감일
 
-
-    @NotBlank
     private List<BoardTechStackRequest> boardTechStackList;
-    @NotBlank
-    private List<BoardPositionRequest> boardPositionList;
+//    private List<BoardPositionRequest> boardPositionList;
+    private List<@Valid BoardPositionRequest> boardPositionList;
 
 
 //    public BoardDto toDto() {
